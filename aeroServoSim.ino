@@ -1,120 +1,96 @@
 #include <Servo.h>
 //Declaração dos pinos dos botões
-const int asaButtonL = 8;
-const int asaButtonR = 7;
-const int lemeButtonR = 2;
-const int lemeButtonL = 12;
-const int rudderButtonUp = 13;
-const int rudderButtonDown = 10;
+const int wingButtonL = 8;
+const int wingButtonR = 7;
+const int rudderButtonR = 2;
+const int rudderButtonL = 12;
+const int tailButtonUp = 13;
+const int tailButtonDown = 10;
 
 //Declaração dos pinos dos motores
-const int asaR = 6;
-const int asaL = 5;
-const int leme = 3;
-const int rudder = 9;
+const int wingR = 6;
+const int wingL = 5;
+const int rudder = 3;
+const int tail = 9;
 
 //Declara os objetos servos
-Servo servAsaR;
-Servo servAsaL;
-Servo servLeme;
+Servo servWingR;
+Servo servWingL;
 Servo servRudder;
+Servo servTail;
 
 //Variavéis auxiliares de estado dos botões 
-int buttonAsaStateL = 0;
-int buttonAsaStateR = 0;
-int buttonLemeStateL = 0;
-int buttonLemeStateR = 0;
+int buttonWingStateL = 0;
+int buttonWingStateR = 0;
 int buttonRudderStateL = 0;
 int buttonRudderStateR = 0;
+int buttonTailStateL = 0;
+int buttonTailStateR = 0;
 
 // Variáveis auxiliares de ângulo
-int angleAsaL = 90;
-int angleAsaR = 90;
-int angleLeme = 90;
+int angleWingL = 90;
+int angleWingR = 90;
 int angleRudder = 90;
+int angleTail = 90;
 
 void setup() {
   // Associando um objeto da classe Servo a sua respectiva pinagem
-  servAsaR.attach(asaR);
-  servAsaL.attach(asaL);
-  servLeme.attach(leme);
+  servWingR.attach(wingR);
+  servWingL.attach(wingL);
   servRudder.attach(rudder);
+  servTail.attach(tail);
 
   // Definindo o modo dos botões
-  pinMode(asaButtonL, INPUT_PULLUP);
-  pinMode(asaButtonR, INPUT_PULLUP);
-  pinMode(lemeButtonR, INPUT_PULLUP);
-  pinMode(lemeButtonL, INPUT_PULLUP);
-  pinMode(rudderButtonUp, INPUT_PULLUP);
-  pinMode(rudderButtonDown, INPUT_PULLUP);
+  pinMode(wingButtonL, INPUT_PULLUP);
+  pinMode(wingButtonR, INPUT_PULLUP);
+  pinMode(rudderButtonR, INPUT_PULLUP);
+  pinMode(rudderButtonL, INPUT_PULLUP);
+  pinMode(tailButtonUp, INPUT_PULLUP);
+  pinMode(tailButtonDown, INPUT_PULLUP);
 }
 
 void loop() {
   // Associa a pinagem dos botões à variável auxiliar de estado
-  buttonAsaStateL = digitalRead(asaButtonL);
-  buttonAsaStateR = digitalRead(asaButtonR);
-  buttonLemeStateL = digitalRead(lemeButtonL);
-  buttonLemeStateR = digitalRead(lemeButtonR);
-  buttonRudderStateL = digitalRead(rudderButtonDown);
-  buttonRudderStateR = digitalRead(rudderButtonUp);
+  buttonWingStateL = digitalRead(wingButtonL);
+  buttonWingStateR = digitalRead(wingButtonR);
+  buttonRudderStateL = digitalRead(rudderButtonL);
+  buttonRudderStateR = digitalRead(rudderButtonR);
+  buttonTailStateL = digitalRead(tailButtonDown);
+  buttonTailStateR = digitalRead(tailButtonUp);
 
-  // Cenários Asa
-  if (buttonAsaStateL == LOW && buttonAsaStateR == LOW) {
-    angleAsaL = 90;
-    angleAsaR = 90;
-    servAsaR.write(angleAsaR);
-    servAsaL.write(angleAsaL);
+  // Cenários Wing
+  if (buttonWingStateL == LOW && buttonWingStateR == LOW) {
+    angleWingL = 90;
+    angleWingR = 90;
+    servWingR.write(angleWingR);
+    servWingL.write(angleWingL);
   }
-  else if (buttonAsaStateL == LOW && buttonAsaStateR == HIGH) {
-    while (angleAsaL > 1 && angleAsaR < 179) {
-      angleAsaL -= 30;
-      angleAsaR += 30;
-      servAsaR.write(angleAsaR);
-      servAsaL.write(angleAsaL);
+  else if (buttonWingStateL == LOW && buttonWingStateR == HIGH) {
+    while (angleWingL > 1 && angleWingR < 179) {
+      angleWingL -= 30;
+      angleWingR += 30;
+      servWingR.write(angleWingR);
+      servWingL.write(angleWingL);
       delay(5);
     }
   }
-  else if (buttonAsaStateL == HIGH && buttonAsaStateR == LOW) {
-    while (angleAsaR > 1 && angleAsaL < 179) {
-      angleAsaL += 35;
-      angleAsaR -= 35;
-      servAsaR.write(angleAsaR);
-      servAsaL.write(angleAsaL);
+  else if (buttonWingStateL == HIGH && buttonWingStateR == LOW) {
+    while (angleWingR > 1 && angleWingL < 179) {
+      angleWingL += 35;
+      angleWingR -= 35;
+      servWingR.write(angleWingR);
+      servWingL.write(angleWingL);
       delay(5);
     }
   }
   else {
-    angleAsaL = 90;
-    angleAsaR = 90;
-    servAsaR.write(angleAsaR);
-    servAsaL.write(angleAsaL);
+    angleWingL = 90;
+    angleWingR = 90;
+    servWingR.write(angleWingR);
+    servWingL.write(angleWingL);
   }
 
-  // Cenários Leme
-  if (buttonLemeStateL == LOW && buttonLemeStateR == LOW) {
-    angleLeme = 90;
-    servLeme.write(angleLeme);
-  }
-  else if (buttonLemeStateL == LOW && buttonLemeStateR == HIGH) {
-    while (angleLeme > 1 ) {
-      angleLeme -= 30;
-      servLeme.write(angleLeme);
-      delay(5);
-    }
-  }
-  else if (buttonLemeStateL == HIGH && buttonLemeStateR == LOW) {
-    while (angleLeme < 179 ) {
-      angleLeme += 30;
-      servLeme.write(angleLeme);
-      delay(5);
-    }
-  }
-  else {
-    angleLeme = 90;
-    servLeme.write(angleLeme);
-  }
-
-  // Cenários Cauda
+  // Cenários Rudder
   if (buttonRudderStateL == LOW && buttonRudderStateR == LOW) {
     angleRudder = 90;
     servRudder.write(angleRudder);
@@ -136,6 +112,30 @@ void loop() {
   else {
     angleRudder = 90;
     servRudder.write(angleRudder);
+  }
+
+  // Cenários Cauda
+  if (buttonTailStateL == LOW && buttonTailStateR == LOW) {
+    angleTail = 90;
+    servTail.write(angleTail);
+  }
+  else if (buttonTailStateL == LOW && buttonTailStateR == HIGH) {
+    while (angleTail > 1 ) {
+      angleTail -= 30;
+      servTail.write(angleTail);
+      delay(5);
+    }
+  }
+  else if (buttonTailStateL == HIGH && buttonTailStateR == LOW) {
+    while (angleTail < 179 ) {
+      angleTail += 30;
+      servTail.write(angleTail);
+      delay(5);
+    }
+  }
+  else {
+    angleTail = 90;
+    servTail.write(angleTail);
   }
 
   delay(10);
